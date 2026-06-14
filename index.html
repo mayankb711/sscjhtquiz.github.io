@@ -5,701 +5,512 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#1a1d23">
     <link rel="manifest" href="manifest.json">
-    <title>SSC JHT 2026 • Updatable Expert Quiz</title>
+    <title>SSC JHT 2026 • Testbook‑Style Expert Quiz</title>
     <style id="dynamicTheme">
+        /* Light Mode (default) */
         :root {
-            --bg-primary: #1a1d23;
-            --bg-secondary: #21252b;
-            --bg-tertiary: #282c34;
-            --bg-card: #252931;
-            --bg-input: #1e2128;
-            --text-primary: #e1e4ea;
-            --text-secondary: #b0b6c1;
-            --text-muted: #6e7687;
-            --accent: #5b9bd5;
-            --accent-bright: #7ab8f5;
-            --accent-dim: #3d7ab8;
-            --green: #4caf84;
-            --red: #e0556a;
-            --orange: #e5a050;
-            --yellow: #d4c05a;
-            --border: #333842;
-            --radius: 10px;
-            --radius-sm: 6px;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-surface: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --accent: #3b82f6;
+            --accent-dark: #2563eb;
+            --accent-light: #dbeafe;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --radius: 1rem;
+            --radius-sm: 0.5rem;
         }
-    </style>
-    <style>
+        [data-theme="dark"] {
+            --bg-body: #0f172a;
+            --bg-card: #1e293b;
+            --bg-surface: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --accent: #60a5fa;
+            --accent-dark: #3b82f6;
+            --accent-light: #1e293b;
+            --border: #334155;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5);
+        }
         *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:'Inter',system-ui,sans-serif;background:var(--bg-primary);color:var(--text-primary);min-height:100vh;line-height:1.5}
-        .app-container{max-width:800px;margin:0 auto;padding:10px 14px;min-height:100vh;display:flex;flex-direction:column}
-        .app-header{display:flex;align-items:center;justify-content:space-between;padding:8px 0;gap:8px;flex-shrink:0;border-bottom:1px solid var(--border);margin-bottom:10px}
-        .app-logo{font-weight:700;font-size:1rem;letter-spacing:-0.3px;color:var(--text-primary);white-space:nowrap}
-        .app-logo span{color:var(--accent-bright)}
-        .header-actions{display:flex;gap:4px}
-        .icon-btn{background:var(--bg-tertiary);border:1px solid var(--border);color:var(--text-secondary);width:30px;height:30px;border-radius:var(--radius-sm);cursor:pointer;font-size:0.85rem;display:flex;align-items:center;justify-content:center;position:relative}
-        .icon-btn:hover{background:var(--bg-card);color:var(--text-primary)}
-        .icon-btn.active{background:var(--accent-dim);border-color:var(--accent);color:#fff}
-        .icon-btn .badge{position:absolute;top:-6px;right:-6px;background:var(--accent-bright);color:#000;font-size:0.6rem;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700}
-        .screen{display:none;flex:1;flex-direction:column;animation:fadeIn 0.2s ease}
-        .screen.active{display:flex}
-        @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-        .dashboard-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-bottom:10px}
-        .stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;text-align:center}
-        .stat-value{font-size:1.6rem;font-weight:700;color:var(--accent-bright)}
-        .stat-value.green{color:var(--green)}.stat-value.orange{color:var(--orange)}
-        .stat-label{font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.4px}
-        .progress-bar-wrap{background:var(--bg-tertiary);border-radius:20px;height:6px;margin:6px 0;overflow:hidden}
-        .progress-bar-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--accent-dim),var(--accent-bright));transition:width 0.4s}
-        .topic-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:5px;margin-top:6px}
-        .topic-chip{background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);padding:6px 8px;cursor:pointer;text-align:center;font-size:0.72rem;transition:all 0.2s}
-        .topic-chip:hover{border-color:var(--accent-dim);background:var(--bg-card)}
-        .topic-chip.weak{border-color:var(--red);background:rgba(224,85,106,0.08)}
-        .topic-chip .topic-acc{font-size:0.6rem;color:var(--text-muted);display:block}
-        .action-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-        .btn{padding:7px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);cursor:pointer;font-weight:600;font-size:0.8rem;transition:all 0.2s;white-space:nowrap;font-family:inherit}
-        .btn-primary{background:var(--accent-dim);color:#fff;border-color:var(--accent)}.btn-primary:hover{background:var(--accent)}
-        .btn-secondary{background:var(--bg-tertiary);color:var(--text-primary)}.btn-secondary:hover{background:var(--border)}
-        .btn-outline{background:transparent;color:var(--accent-bright);border-color:var(--accent-dim)}.btn-outline:hover{background:rgba(91,155,213,0.1)}
-        .btn-sm{padding:4px 10px;font-size:0.7rem}.btn-xs{padding:3px 7px;font-size:0.65rem}
-        .quiz-top-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px;padding:8px 12px;background:var(--bg-card);border-radius:var(--radius);border:1px solid var(--border)}
-        .quiz-progress-text{font-size:0.7rem;color:var(--text-muted);font-family:monospace}
-        .quiz-timer{font-family:monospace;font-weight:700;font-size:0.95rem;color:var(--orange);min-width:40px;text-align:right}
-        .quiz-timer.warning{color:var(--red);animation:pulse 0.7s infinite}
-        @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
-        .quiz-lang-badge{font-size:0.6rem;padding:2px 8px;border-radius:20px;font-weight:600;text-transform:uppercase;background:var(--bg-tertiary);border:1px solid var(--border);color:var(--text-secondary)}
-        .question-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 12px;margin-bottom:8px;flex:1;display:flex;flex-direction:column;gap:10px}
-        .question-number{font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.8px;font-weight:600}
-        .question-text{font-size:0.95rem;font-weight:500;line-height:1.6}
-        .question-text.hindi{font-family:'Noto Sans Devanagari','Mangal',sans-serif;font-size:1rem}
-        .options-list{display:flex;flex-direction:column;gap:5px}
-        .option-item{background:var(--bg-tertiary);border:2px solid var(--border);border-radius:var(--radius-sm);padding:9px 11px;cursor:pointer;transition:all 0.2s;font-size:0.85rem;display:flex;align-items:center;gap:7px}
-        .option-item:hover{border-color:var(--accent-dim);background:var(--bg-input)}
-        .option-item.selected{border-color:var(--accent);background:rgba(91,155,213,0.12)}
-        .option-item.correct{border-color:var(--green);background:rgba(76,175,132,0.15);color:var(--green)}
-        .option-item.incorrect{border-color:var(--red);background:rgba(224,85,106,0.15);color:var(--red)}
-        .option-item.revealed{border-color:var(--green);background:rgba(76,175,132,0.05)}
-        .option-letter{font-weight:700;width:20px;height:20px;border-radius:50%;background:var(--bg-primary);display:flex;align-items:center;justify-content:center;font-size:0.7rem;border:1px solid var(--border)}
-        .option-item.selected .option-letter{background:var(--accent);border-color:var(--accent);color:#fff}
-        .option-item.correct .option-letter{background:var(--green);border-color:var(--green);color:#fff}
-        .option-item.incorrect .option-letter{background:var(--red);border-color:var(--red);color:#fff}
-        .explanation-box{background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 10px;font-size:0.75rem;color:var(--text-secondary);display:none;margin-top:4px}
-        .explanation-box.show{display:block}
-        .quiz-nav-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:space-between;flex-shrink:0}
-        .bookmark-btn{background:transparent;border:1px solid var(--border);color:var(--text-muted);cursor:pointer;padding:6px 10px;border-radius:var(--radius-sm);font-size:0.75rem;display:flex;align-items:center;gap:4px}
-        .bookmark-btn:hover{color:var(--yellow);border-color:var(--yellow)}
-        .bookmark-btn.bookmarked{color:var(--yellow);border-color:var(--yellow);background:rgba(212,192,90,0.1)}
-        .palette-wrap{display:flex;gap:3px;flex-wrap:wrap;margin-top:4px}
-        .palette-dot{width:22px;height:22px;border-radius:50%;background:var(--bg-tertiary);border:1.5px solid var(--border);cursor:pointer;font-size:0.5rem;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-weight:600}
-        .palette-dot.answered{background:var(--accent-dim);border-color:var(--accent);color:#fff}
-        .palette-dot.bookmarked-dot{border-color:var(--yellow);box-shadow:0 0 0 2px rgba(212,192,90,0.3)}
-        .palette-dot.current{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,0.2)}
-        .results-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:6px;margin:10px 0}
-        .result-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:10px;text-align:center}
-        .review-item{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px;margin-bottom:4px;cursor:pointer;font-size:0.78rem}
-        .review-item.correct-review{border-left:3px solid var(--green)}.review-item.incorrect-review{border-left:3px solid var(--red)}
-        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;display:none;align-items:center;justify-content:center;padding:12px}
+        body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg-body);color:var(--text-primary);transition:background 0.2s,color 0.2s;min-height:100vh;line-height:1.5}
+        .app-container{max-width:1200px;margin:0 auto;padding:1rem;min-height:100vh}
+        /* Header */
+        .app-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem;margin-bottom:1.5rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border)}
+        .logo{font-weight:800;font-size:1.35rem;background:linear-gradient(135deg,var(--accent),var(--accent-dark));-webkit-background-clip:text;background-clip:text;color:transparent}
+        .header-actions{display:flex;gap:0.5rem;align-items:center}
+        .icon-btn{background:var(--bg-surface);border:1px solid var(--border);color:var(--text-secondary);width:36px;height:36px;border-radius:2rem;cursor:pointer;font-size:1rem;display:inline-flex;align-items:center;justify-content:center;transition:all 0.2s}
+        .icon-btn:hover{background:var(--accent-light);color:var(--accent);border-color:var(--accent)}
+        .icon-btn.active{background:var(--accent);color:white;border-color:var(--accent)}
+        .badge{position:absolute;top:-6px;right:-6px;background:var(--accent);color:white;font-size:0.6rem;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700}
+        /* Theme toggle */
+        .theme-toggle{background:var(--bg-surface);border:none;cursor:pointer;font-size:1.2rem;padding:0.2rem 0.5rem;border-radius:2rem}
+        /* Screens */
+        .screen{display:none;animation:fadeIn 0.2s}
+        .screen.active{display:block}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+        /* Cards & Stats */
+        .hero-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:1.5rem}
+        .stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;box-shadow:var(--shadow-sm);text-align:center}
+        .stat-value{font-size:2rem;font-weight:800;color:var(--accent)}
+        .stat-label{font-size:0.7rem;text-transform:uppercase;color:var(--text-muted);letter-spacing:0.5px}
+        .circular-progress{width:80px;height:80px;margin:0 auto;position:relative}
+        .circular-progress svg{transform:rotate(-90deg);width:100%;height:100%}
+        .circular-progress circle{fill:none;stroke-width:8}
+        .circular-progress .bg{stroke:var(--border)}
+        .circular-progress .progress{stroke:var(--accent);stroke-linecap:round;transition:stroke-dashoffset 0.3s}
+        .circular-progress text{fill:var(--text-primary);font-size:1rem;font-weight:700;transform:rotate(90deg);text-anchor:middle;dominant-baseline:middle}
+        /* Topic grid */
+        .topic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:0.75rem;margin:1rem 0}
+        .topic-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.75rem;cursor:pointer;transition:all 0.2s;text-align:center}
+        .topic-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--accent)}
+        .topic-card.weak{border-left:4px solid var(--danger)}
+        .topic-name{font-weight:600;font-size:0.8rem}
+        .topic-accuracy{font-size:0.65rem;color:var(--text-muted)}
+        /* Quiz specific */
+        .quiz-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;margin-bottom:1rem}
+        .quiz-meta{display:flex;gap:0.75rem;align-items:center}
+        .lang-badge{background:var(--accent-light);color:var(--accent);padding:0.2rem 0.6rem;border-radius:2rem;font-size:0.7rem;font-weight:600}
+        .timer-circle{width:50px;height:50px;position:relative}
+        .timer-svg{transform:rotate(-90deg)}
+        .timer-svg circle{fill:none;stroke-width:4}
+        .timer-bg{stroke:var(--border)}
+        .timer-progress{stroke:var(--warning);stroke-linecap:round}
+        .timer-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:0.7rem;font-weight:700}
+        .palette-grid{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1rem;justify-content:center}
+        .palette-item{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--bg-surface);border:2px solid var(--border);cursor:pointer;font-weight:600;transition:0.1s}
+        .palette-item.current{background:var(--accent);color:white;border-color:var(--accent)}
+        .palette-item.answered-correct{background:var(--success);color:white;border-color:var(--success)}
+        .palette-item.answered-wrong{background:var(--danger);color:white;border-color:var(--danger)}
+        .palette-item.marked{background:var(--warning);color:white;border-color:var(--warning)}
+        .question-card{background:var(--bg-card);border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow-md);margin-bottom:1rem}
+        .question-text{font-size:1.2rem;font-weight:500;margin-bottom:1rem;line-height:1.5}
+        .options-list{display:flex;flex-direction:column;gap:0.75rem}
+        .option-item{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.85rem 1rem;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:0.75rem}
+        .option-item:hover{background:var(--accent-light);border-color:var(--accent)}
+        .option-item.selected{background:rgba(59,130,246,0.1);border-color:var(--accent);border-width:2px}
+        .option-item.correct{background:rgba(16,185,129,0.15);border-color:var(--success)}
+        .option-item.incorrect{background:rgba(239,68,68,0.15);border-color:var(--danger)}
+        .option-letter{font-weight:700;width:28px;height:28px;border-radius:50%;background:var(--bg-card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center}
+        .explanation{background:var(--bg-surface);border-radius:var(--radius-sm);padding:0.75rem;margin-top:0.75rem;font-size:0.85rem;border-left:3px solid var(--accent);display:none}
+        .explanation.show{display:block}
+        .quiz-nav{display:flex;gap:0.5rem;justify-content:space-between;margin-top:0.5rem}
+        .btn{padding:0.6rem 1.2rem;border-radius:2rem;border:none;font-weight:600;cursor:pointer;transition:0.2s}
+        .btn-primary{background:var(--accent);color:white}
+        .btn-primary:hover{background:var(--accent-dark)}
+        .btn-secondary{background:var(--bg-surface);color:var(--text-primary);border:1px solid var(--border)}
+        .btn-secondary:hover{background:var(--accent-light)}
+        /* Results */
+        .results-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1rem 0}
+        .weakness-heatmap{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:0.5rem;margin:1rem 0}
+        .heatmap-cell{padding:0.5rem;border-radius:var(--radius-sm);text-align:center;font-size:0.7rem;color:white}
+        /* Modal */
+        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;display:none;align-items:center;justify-content:center}
         .modal-overlay.show{display:flex}
-        .modal{background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;width:100%;max-width:550px;max-height:80vh;overflow-y:auto;box-shadow:0 4px 16px rgba(0,0,0,0.4)}
-        .modal h3{margin-bottom:8px;color:var(--text-primary)}
-        .modal textarea{width:100%;min-height:100px;background:var(--bg-input);border:1px solid var(--border);color:var(--text-primary);padding:8px;border-radius:var(--radius-sm);font-family:monospace;font-size:0.7rem;resize:vertical}
-        .toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--bg-tertiary);border:1px solid var(--border);color:var(--text-primary);padding:6px 16px;border-radius:20px;font-size:0.75rem;z-index:200;animation:toastIn 0.3s}
-        @keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(12px)}}
-        .pdf-preview-list{max-height:200px;overflow-y:auto;margin:8px 0;background:var(--bg-input);border-radius:var(--radius-sm);padding:4px}
-        .pdf-preview-item{font-size:0.7rem;margin:4px 0;border-bottom:1px solid var(--border);padding:4px}
-        @media(max-width:480px){.app-container{padding:6px 8px}.question-card{padding:10px 8px}.btn{padding:5px 10px;font-size:0.7rem}.stat-value{font-size:1.3rem}}
+        .modal{background:var(--bg-card);border-radius:var(--radius);padding:1.5rem;width:90%;max-width:600px;max-height:80vh;overflow-y:auto}
+        .modal-tabs{display:flex;gap:0.5rem;border-bottom:1px solid var(--border);margin-bottom:1rem}
+        .tab-btn{background:none;border:none;padding:0.5rem 1rem;cursor:pointer;color:var(--text-secondary)}
+        .tab-btn.active{color:var(--accent);border-bottom:2px solid var(--accent)}
+        .tab-pane{display:none}
+        .tab-pane.active{display:block}
+        textarea, input{width:100%;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.5rem;color:var(--text-primary)}
+        /* Bottom nav for mobile */
+        .bottom-nav{display:none}@media(max-width:640px){.bottom-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:var(--bg-card);border-top:1px solid var(--border);padding:0.5rem;justify-content:space-around;z-index:50}.app-container{padding-bottom:70px}}
+        .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--bg-card);border:1px solid var(--border);padding:0.5rem 1rem;border-radius:2rem;font-size:0.8rem;z-index:1001;animation:fadeIn 0.2s}
+        @media(max-width:640px){.toast{bottom:70px}}
     </style>
 </head>
-<body>
-    <div class="app-container">
-        <header class="app-header">
-            <div class="app-logo">SSC <span>JHT</span> 2026 • Expert</div>
-            <div class="header-actions">
-                <button class="icon-btn" id="btnDashboard" aria-label="Dashboard">📊</button>
-                <button class="icon-btn" id="btnBookmarks" aria-label="Bookmarks">🔖<span class="badge" id="bookmarkCount" style="display:none">0</span></button>
-                <button class="icon-btn" id="btnWeakness" aria-label="Weakness Analysis">🎯</button>
-                <button class="icon-btn" id="btnImport" aria-label="Import/Export">📥</button>
-            </div>
-        </header>
-        <div class="screen active" id="screenDashboard">
-            <div class="dashboard-grid">
-                <div class="stat-card"><div class="stat-value" id="statTotalQ">0</div><div class="stat-label" id="lblAttempted">Attempted</div></div>
-                <div class="stat-card"><div class="stat-value green" id="statAccuracy">--%</div><div class="stat-label" id="lblAccuracy">Accuracy</div></div>
-                <div class="stat-card"><div class="stat-value orange" id="statStreak">0</div><div class="stat-label" id="lblStreak">Streak</div></div>
-                <div class="stat-card"><div class="stat-value" id="statBookmarks">0</div><div class="stat-label" id="lblBookmarks">Bookmarks</div></div>
-            </div>
-            <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar" style="width:0%"></div></div>
-            <p style="font-size:0.7rem;color:var(--text-muted);text-align:center" id="progressLabel">Start a quiz</p>
-            <div class="topic-grid" id="topicGrid"></div>
-            <div class="action-row" style="margin-top:10px">
-                <button class="btn btn-primary" id="btnQuickQuiz">⚡ Quick Quiz</button>
-                <button class="btn btn-secondary" id="btnMockTest">⏱️ Mock Test</button>
-                <button class="btn btn-outline" id="btnResumeSession" style="display:none">🔄 Resume</button>
-            </div>
-            <div class="action-row">
-                <button class="btn btn-sm btn-secondary" id="btnHindiOnly">हिन्दी Quiz</button>
-                <button class="btn btn-sm btn-secondary" id="btnEnglishOnly">English Quiz</button>
-                <button class="btn btn-sm btn-secondary" id="btnMixedQuiz">🔀 Mixed</button>
-            </div>
-            <p style="font-size:0.6rem;color:var(--text-muted);text-align:center;margin-top:6px"><kbd>1-4</kbd> Ans <kbd>←→</kbd> Nav <kbd>Space</kbd> Next <kbd>B</kbd> Bookmark</p>
+<body data-theme="light">
+<div class="app-container">
+    <header class="app-header">
+        <div class="logo">SSC <span style="color:var(--accent)">JHT</span> 2026 • Testbook Style</div>
+        <div class="header-actions">
+            <button class="icon-btn theme-toggle" id="themeToggle" aria-label="Dark/Light">🌙</button>
+            <button class="icon-btn" id="btnDashboard">📊</button>
+            <button class="icon-btn" id="btnBookmarks">🔖<span class="badge" id="bookmarkBadge" style="display:none">0</span></button>
+            <button class="icon-btn" id="btnWeakness">🎯</button>
+            <button class="icon-btn" id="btnImport">📥</button>
         </div>
-        <div class="screen" id="screenQuiz">
-            <div class="quiz-top-bar">
-                <span class="quiz-progress-text" id="quizProgress">Q 1/10</span>
-                <span class="quiz-lang-badge" id="quizLangBadge">MIXED</span>
-                <span class="quiz-timer" id="quizTimer">--:--</span>
-                <button class="btn btn-xs btn-outline" id="btnEndQuiz">✕ End</button>
-            </div>
-            <div class="palette-wrap" id="paletteWrap"></div>
-            <div class="question-card" id="questionCard">
-                <div class="question-number" id="questionNumber">QUESTION 1</div>
-                <div class="question-text" id="questionText"></div>
-                <div class="options-list" id="optionsList"></div>
-                <div class="explanation-box" id="explanationBox"></div>
-            </div>
-            <div class="quiz-nav-row">
-                <div class="quiz-nav-btns">
-                    <button class="btn btn-sm btn-secondary" id="btnPrev">← Prev</button>
-                    <button class="btn btn-sm btn-primary" id="btnNext">Next →</button>
-                    <button class="bookmark-btn" id="btnBookmarkQuiz">🔖 <span>(B)</span></button>
-                </div>
-            </div>
+    </header>
+    <!-- Screens -->
+    <div class="screen active" id="screenDashboard">
+        <div class="hero-grid" id="heroStats"></div>
+        <div class="topic-grid" id="topicGrid"></div>
+        <div class="action-row" style="display:flex;gap:0.5rem;flex-wrap:wrap">
+            <button class="btn btn-primary" id="quickQuiz">⚡ Quick Quiz (10)</button>
+            <button class="btn btn-secondary" id="mockTest">⏱️ Mock Test (30)</button>
+            <button class="btn btn-secondary" id="resumeSessionBtn" style="display:none">🔄 Resume</button>
         </div>
-        <div class="screen" id="screenResults">
-            <h3 style="margin-bottom:6px">📋 Session Results</h3>
-            <div class="results-summary" id="resultsSummary"></div>
-            <div style="max-height:45vh;overflow-y:auto" id="reviewList"></div>
-            <div class="action-row">
-                <button class="btn btn-primary" id="btnNewQuiz">New Quiz</button>
-                <button class="btn btn-secondary" id="btnReviewWeakness">🎯 Weak Areas</button>
-                <button class="btn btn-outline" id="btnBackToDashboard">Dashboard</button>
-            </div>
+        <div class="action-row" style="margin-top:0.5rem">
+            <button class="btn btn-secondary" id="hindiOnly">🇮🇳 हिन्दी</button>
+            <button class="btn btn-secondary" id="englishOnly">🇬🇧 English</button>
+            <button class="btn btn-secondary" id="mixedQuiz">🔀 Mixed</button>
         </div>
-        <div class="screen" id="screenBookmarks">
-            <h3>🔖 Bookmarks</h3>
-            <p id="bookmarkInfo" style="font-size:0.7rem;color:var(--text-muted)"></p>
-            <div id="bookmarkList" style="max-height:50vh;overflow-y:auto"></div>
-            <div class="action-row">
-                <button class="btn btn-sm btn-primary" id="btnPracticeBookmarks">Practice</button>
-                <button class="btn btn-sm btn-outline" id="btnClearBookmarks">Clear All</button>
-            </div>
-        </div>
-        <div class="screen" id="screenWeakness">
-            <h3>🎯 Weakness Analysis</h3>
-            <p style="font-size:0.7rem;color:var(--text-muted)">Accuracy below 60% after min 3 attempts</p>
-            <div id="weaknessList"></div>
-            <div class="action-row">
-                <button class="btn btn-primary" id="btnPracticeWeak">Practice Weak</button>
-                <button class="btn btn-outline" id="btnBackFromWeakness">Back</button>
-            </div>
-        </div>
+        <p style="font-size:0.7rem;text-align:center;margin-top:1rem">⌨️ 1-4: answer • ←/→: navigate • B: bookmark</p>
     </div>
-    <div class="modal-overlay" id="modalImport">
-        <div class="modal">
-            <h3>📥 Import / Export (Modular Updates)</h3>
-            <p style="font-size:0.7rem;color:var(--text-muted)">Paste JSON to update bank, theme, logic, or UI copy. Use file upload for PDF/JSON.</p>
-            <textarea id="importTextarea" placeholder='{"type":"granular_update","theme":{"--accent":"#ff0000"},"logic":{"adaptiveScore":"function(q,prog,tStats){...}"},"uiCopy":{"btnQuickQuiz":"⚡ Rapid"}}'></textarea>
-            <div class="btn-row">
-                <input type="file" id="fileInput" accept=".json,.pdf,.txt" style="display:none">
-                <button class="btn btn-sm btn-secondary" id="btnFileUpload">📁 Upload</button>
-                <button class="btn btn-sm btn-primary" id="btnImportData">Import JSON</button>
-                <button class="btn btn-sm btn-outline" id="btnExportBank">Export Bank</button>
-                <button class="btn btn-sm btn-outline" id="btnExportProgress">Export Progress</button>
-                <button class="btn btn-sm btn-outline" id="btnExportSnapshot">Export Snapshot</button>
-                <button class="btn btn-sm btn-secondary" id="btnCloseModal">Close</button>
-            </div>
-            <p id="importStatus" style="font-size:0.6rem;color:var(--text-muted);margin-top:4px"></p>
+    <div class="screen" id="screenQuiz">
+        <div class="quiz-header">
+            <div class="quiz-meta"><span id="quizProgress">Q1/10</span><span class="lang-badge" id="quizLang">mixed</span></div>
+            <div class="timer-circle"><svg viewBox="0 0 50 50" class="timer-svg"><circle cx="25" cy="25" r="22" class="timer-bg"/><circle cx="25" cy="25" r="22" class="timer-progress" stroke-dasharray="138.23" stroke-dashoffset="0"/></svg><span class="timer-text" id="timerText">00:00</span></div>
+            <button class="btn btn-secondary" id="endQuizBtn" style="padding:0.3rem 0.8rem">✕ End</button>
         </div>
+        <div class="palette-grid" id="paletteGrid"></div>
+        <div class="question-card"><div class="question-text" id="questionText"></div><div class="options-list" id="optionsList"></div><div class="explanation" id="explanationBox"></div></div>
+        <div class="quiz-nav"><button class="btn btn-secondary" id="prevBtn">← Prev</button><button class="btn btn-primary" id="nextBtn">Next →</button><button class="btn btn-secondary" id="flagBtn">🚩 Flag</button><button class="btn btn-secondary" id="bookmarkQuizBtn">🔖 Bookmark</button></div>
     </div>
-    <script>
-        (()=>{
-            // --------------------------------------------------------------
-            // CORE APP ENGINE - modular, updatable, token-efficient
-            // --------------------------------------------------------------
-            const STORAGE_KEY = 'ssc_jht_modular_v3';
-            const APP_VERSION = '3.1.0';
-
-            // ---------- DEFAULT MODULES ----------
-            const DEFAULT_TOPICS = [
-                'hindi_reading','english_reading','hindi_grammar','english_grammar',
-                'hindi_vocab','english_vocab','hindi_idioms','english_idioms',
-                'admin_hindi','english_cloze','sentence_correction','spelling_homonyms'
-            ];
-            const DEFAULT_TOPIC_LABELS = {
-                hindi_reading:'हिन्दी RC', english_reading:'English RC', hindi_grammar:'हिन्दी व्याकरण',
-                english_grammar:'English Grammar', hindi_vocab:'हिन्दी शब्दावली', english_vocab:'English Vocab',
-                hindi_idioms:'हिन्दी मुहावरे', english_idioms:'English Idioms', admin_hindi:'प्रशासनिक हिन्दी',
-                english_cloze:'Cloze Test', sentence_correction:'Sentence Correction', spelling_homonyms:'Spelling'
-            };
-            const DEFAULT_THEME = {
-                "--bg-primary":"#1a1d23","--bg-secondary":"#21252b","--bg-tertiary":"#282c34",
-                "--bg-card":"#252931","--bg-input":"#1e2128","--text-primary":"#e1e4ea",
-                "--text-secondary":"#b0b6c1","--text-muted":"#6e7687","--accent":"#5b9bd5",
-                "--accent-bright":"#7ab8f5","--accent-dim":"#3d7ab8","--green":"#4caf84",
-                "--red":"#e0556a","--orange":"#e5a050","--yellow":"#d4c05a",
-                "--border":"#333842","--radius":"10px","--radius-sm":"6px"
-            };
-            const DEFAULT_UI_COPY = {
-                appTitle:'SSC <span>JHT</span> 2026 • Paper 1 Expert',
-                btnQuickQuiz:'⚡ Quick Quiz (10 Qs)',
-                btnMockTest:'⏱️ Mock Test (30 Qs • 20 min)',
-                btnResume:'🔄 Resume',
-                lblAttempted:'Attempted', lblAccuracy:'Accuracy', lblStreak:'Streak', lblBookmarks:'Bookmarks',
-                progressEmpty:'Start a quiz to build progress',
-                quizEnd:'✕ End', prev:'← Prev', next:'Next →', finish:'🏁 Finish', bookmark:'Bookmark',
-                toastBookmarked:'🔖 Bookmarked!', toastRemoved:'Bookmark removed', toastTimeUp:'⏰ Time up!'
-            };
-            
-            // Adaptive scoring with difficulty awareness
-            function defaultAdaptiveScore(q, prog, topicStats, diffStats) {
-                let score = Math.random() * 8;
-                const tStats = topicStats[q.topic] || { attempts:0, correct:0 };
-                if (tStats.attempts>=3 && (tStats.correct/tStats.attempts)<0.55) score+=45;
-                if (prog.bookmarked) score+=35;
-                if (prog.lastSeen) {
-                    const h = (Date.now()-prog.lastSeen)/3600000;
-                    if (h<2) score-=30; else if (h<24) score-=10;
-                }
-                // difficulty-based weakness
-                const diffKey = q.difficulty || 'medium';
-                const diffPerf = (prog.difficultyStats && prog.difficultyStats[diffKey]) || { attempts:0, correct:0 };
-                if (diffPerf.attempts >= 2 && diffPerf.correct/diffPerf.attempts < 0.5) score+=25;
-                if (prog.attempts===0) score+=18;
-                if (prog.attempts>0 && prog.correct===0) score+=22;
-                if (q.difficulty==='hard') score+=6;
-                return score;
+    <div class="screen" id="screenResults"><div id="resultsContent"></div><div class="action-row"><button class="btn btn-primary" id="newQuizBtn">New Quiz</button><button class="btn btn-secondary" id="retryIncorrectBtn">Retry Incorrect</button><button class="btn btn-outline" id="backDashboardBtn">Dashboard</button></div></div>
+    <div class="screen" id="screenBookmarks"><h3>🔖 Bookmarks</h3><div id="bookmarkList"></div><button class="btn btn-primary" id="practiceBookmarksBtn">Practice Bookmarks</button><button class="btn btn-secondary" id="clearBookmarksBtn">Clear All</button></div>
+    <div class="screen" id="screenWeakness"><h3>🎯 Weakness Heatmap</h3><div id="weaknessHeatmap"></div><button class="btn btn-primary" id="practiceWeakBtn">Practice Weak Topics</button></div>
+</div>
+<div class="modal-overlay" id="importModal"><div class="modal"><div class="modal-tabs"><button class="tab-btn active" data-tab="theme">Theme</button><button class="tab-btn" data-tab="questions">Questions</button><button class="tab-btn" data-tab="snapshot">Snapshot</button></div><div class="tab-pane active" id="tabTheme"><p>Customize colors</p><input type="color" id="accentColor" value="#3b82f6"><button id="applyThemeBtn">Apply</button></div><div class="tab-pane" id="tabQuestions"><textarea id="jsonImport" placeholder='[{"id":"q1","q":"text","options":["a","b","c","d"],"correct":0,"explanation":"","topic":"hindi_vocab","difficulty":"medium","lang":"hindi"}]'></textarea><button id="importQuestionsBtn">Import JSON</button><input type="file" id="fileUpload" accept=".json,.pdf"><button id="uploadFileBtn">Upload PDF/JSON</button></div><div class="tab-pane" id="tabSnapshot"><button id="exportSnapshotBtn">Export Snapshot</button><button id="importSnapshotBtn">Import Snapshot</button><input type="file" id="snapshotFile" accept=".json"></div><button class="btn btn-secondary" id="closeModalBtn">Close</button></div></div>
+<script>
+(function(){
+    // ---------- STORAGE & INIT ----------
+    const STORAGE_KEY = 'ssc_jht_testbook';
+    let state = {
+        questionBank: [],
+        progress: {},
+        topicStats: {},
+        streak: 0, totalAttempted: 0, totalCorrect: 0,
+        lastSession: null, currentQuiz: null,
+        sessionHistory: [] // for trends
+    };
+    const DEFAULT_BANK = [
+        {id:"q1",topic:"hindi_vocab",difficulty:"medium",lang:"hindi",q:"'कलश' का अर्थ नहीं है:",options:["घड़ा","चोटी","संगीत वाद्य","पानी का बर्तन"],correct:2,explanation:"कलश = घड़ा या शिखर, संगीत वाद्य नहीं।"},
+        {id:"q2",topic:"english_vocab",difficulty:"easy",lang:"english",q:"Synonym of 'Benevolent':",options:["Kind","Cruel","Greedy","Angry"],correct:0,explanation:"Benevolent = kind."},
+        {id:"q3",topic:"hindi_grammar",difficulty:"medium",lang:"hindi",q:"'राम स्कूल गया।' वाक्य प्रकार:",options:["सरल","संयुक्त","मिश्र","प्रश्नवाचक"],correct:0,explanation:"एक उद्देश्य व विधेय।"},
+        {id:"q4",topic:"admin_hindi",difficulty:"medium",lang:"hindi",q:"'Cadre' का हिन्दी:",options:["संवर्ग","वर्ग","दल","श्रेणी"],correct:0,explanation:"संवर्ग।"},
+        {id:"q5",topic:"english_idioms",difficulty:"medium",lang:"english",q:"'Keep wolf away from door' means:",options:["Avoid financial hardship","Fight enemies","Hunt animals","Run fast"],correct:0,explanation:"Avoid poverty."}
+    ];
+    function loadState(){
+        try{
+            let raw = localStorage.getItem(STORAGE_KEY);
+            if(raw){
+                let d = JSON.parse(raw);
+                state.questionBank = d.questionBank?.length?d.questionBank:DEFAULT_BANK;
+                state.progress = d.progress||{};
+                state.topicStats = d.topicStats||{};
+                state.streak = d.streak||0; state.totalAttempted = d.totalAttempted||0; state.totalCorrect = d.totalCorrect||0;
+                state.lastSession = d.lastSession||null;
+                state.sessionHistory = d.sessionHistory||[];
+            } else {
+                state.questionBank = [...DEFAULT_BANK];
             }
-            
-            function defaultSelectQuestions(pool, count, progress, topicStats) {
-                const scored = pool.map(q => {
-                    const prog = progress[q.id] || { attempts:0, correct:0, lastSeen:null, bookmarked:false, difficultyStats:{} };
-                    return { q, score: defaultAdaptiveScore(q, prog, topicStats, prog.difficultyStats) };
-                });
-                scored.sort((a,b)=>b.score-a.score);
-                const selected = scored.slice(0, Math.min(count*2, scored.length));
-                const shuffled = shuffle(selected.map(i=>i.q));
-                const topicCnt = {}; const diverse=[]; const extra=[];
-                for (const q of shuffled) {
-                    const t = q.topic;
-                    if (!topicCnt[t]) topicCnt[t]=0;
-                    if (topicCnt[t] < Math.ceil(count/DEFAULT_TOPICS.length)+1) { diverse.push(q); topicCnt[t]++; }
-                    else extra.push(q);
-                }
-                return shuffle([...diverse, ...extra].slice(0,count));
+        }catch(e){state.questionBank=[...DEFAULT_BANK];}
+        state.questionBank.forEach(q=>{
+            if(!state.progress[q.id]) state.progress[q.id] = {attempts:0, correct:0, lastSeen:null, bookmarked:false, markedForReview:false, times:[]};
+            if(!state.topicStats[q.topic]) state.topicStats[q.topic] = {attempts:0, correct:0};
+        });
+    }
+    function saveState(){
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+            questionBank: state.questionBank, progress: state.progress, topicStats: state.topicStats,
+            streak: state.streak, totalAttempted: state.totalAttempted, totalCorrect: state.totalCorrect,
+            lastSession: state.lastSession, sessionHistory: state.sessionHistory
+        }));
+    }
+    // Helper functions
+    function getOverallAccuracy(){return state.totalAttempted?Math.round(state.totalCorrect/state.totalAttempted*100):0;}
+    function getTopicAccuracy(t){let s=state.topicStats[t];return s&&s.attempts?Math.round(s.correct/s.attempts*100):null;}
+    function getBookmarkedIds(){return Object.keys(state.progress).filter(id=>state.progress[id].bookmarked);}
+    function getWeakTopics(threshold=60){return Object.entries(state.topicStats).filter(([,v])=>v.attempts>=3 && (v.correct/v.attempts)*100 < threshold).map(([k])=>k);}
+    // Adaptive + spaced repetition
+    function selectAdaptiveQuestions(count, filters={}){
+        let pool = [...state.questionBank];
+        if(filters.lang && filters.lang!=='mixed') pool = pool.filter(q=>q.lang===filters.lang);
+        if(filters.topic) pool = pool.filter(q=>q.topic===filters.topic);
+        if(filters.bookmarkedOnly) pool = pool.filter(q=>getBookmarkedIds().includes(q.id));
+        if(filters.weakOnly){ let weaks=getWeakTopics(); pool = pool.filter(q=>weaks.includes(q.topic)); }
+        if(pool.length===0) pool=[...state.questionBank];
+        let scored = pool.map(q=>{
+            let p = state.progress[q.id];
+            let score = Math.random()*5;
+            if(p.bookmarked) score+=30;
+            if(p.markedForReview) score+=20;
+            let topicAcc = getTopicAccuracy(q.topic);
+            if(topicAcc && topicAcc<50) score+=40;
+            else if(topicAcc && topicAcc<70) score+=20;
+            // spaced repetition: older lastSeen boosts score
+            if(p.lastSeen){ let days= (Date.now()-p.lastSeen)/86400000; if(days>2) score+=15*days; }
+            if(p.attempts===0) score+=35;
+            return {q,score};
+        });
+        scored.sort((a,b)=>b.score-a.score);
+        let selected = scored.slice(0,count).map(s=>s.q);
+        if(selected.length<count) selected = [...selected, ...pool.slice(0,count-selected.length)];
+        return selected;
+    }
+    // UI rendering helpers
+    function renderDashboard(){
+        let acc = getOverallAccuracy();
+        let attempted = state.totalAttempted;
+        let bookmarked = getBookmarkedIds().length;
+        let streak = state.streak;
+        document.getElementById('heroStats').innerHTML = `
+            <div class="stat-card"><div class="stat-value">${attempted}</div><div class="stat-label">Attempted</div></div>
+            <div class="stat-card"><div class="circular-progress"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="45"/><circle class="progress" cx="50" cy="50" r="45" stroke-dasharray="282.74" stroke-dashoffset="${282.74*(1-acc/100)}"/><text x="50" y="55">${acc}%</text></svg></div><div class="stat-label">Accuracy</div></div>
+            <div class="stat-card"><div class="stat-value">🔥 ${streak}</div><div class="stat-label">Streak</div></div>
+            <div class="stat-card"><div class="stat-value">📌 ${bookmarked}</div><div class="stat-label">Bookmarks</div></div>`;
+        let topics = [...new Set(state.questionBank.map(q=>q.topic))];
+        document.getElementById('topicGrid').innerHTML = topics.map(t=>{
+            let a = getTopicAccuracy(t);
+            let weak = a!==null && a<60;
+            return `<div class="topic-card ${weak?'weak':''}" data-topic="${t}"><div class="topic-name">${t.replace('_',' ').toUpperCase()}</div><div class="topic-accuracy">${a!==null?a+'%':'—'}</div></div>`;
+        }).join('');
+        document.querySelectorAll('.topic-card').forEach(el=>el.addEventListener('click',()=>startQuiz({count:8,lang:'mixed',topic:el.dataset.topic})));
+        document.getElementById('resumeSessionBtn').style.display = state.lastSession ? 'inline-block' : 'none';
+    }
+    // Quiz engine
+    let autoAdvanceTimer = null;
+    function startQuiz(config){
+        if(autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
+        let questions = selectAdaptiveQuestions(config.count || 10, config);
+        if(!questions.length) return;
+        let timerSec = config.timerSeconds || (config.mode==='mock'?1200:null);
+        state.currentQuiz = {questions, answers:{}, flagged:{}, currentIndex:0, mode:config.mode||'practice', timerSec, startTime:Date.now(), timerInterval:null};
+        state.lastSession = {questions:questions.map(q=>q.id), answers:{}, flagged:{}, currentIndex:0, mode:config.mode, timerSec, timestamp:Date.now()};
+        saveState();
+        showScreen('quiz');
+        renderQuizQuestion();
+        if(timerSec) startTimer();
+    }
+    function startTimer(){
+        if(state.currentQuiz.timerInterval) clearInterval(state.currentQuiz.timerInterval);
+        state.currentQuiz.timerInterval = setInterval(()=>{
+            if(!state.currentQuiz) return;
+            state.currentQuiz.timerSec--;
+            updateTimerDisplay();
+            if(state.currentQuiz.timerSec <= 0){ clearInterval(state.currentQuiz.timerInterval); endQuiz(true); }
+        },1000);
+        updateTimerDisplay();
+    }
+    function updateTimerDisplay(){
+        if(!state.currentQuiz) return;
+        let sec = Math.max(0, state.currentQuiz.timerSec);
+        let mins = Math.floor(sec/60), remain = sec%60;
+        document.getElementById('timerText').innerText = `${mins.toString().padStart(2,'0')}:${remain.toString().padStart(2,'0')}`;
+        let total = state.currentQuiz.timerSecInit || 1200;
+        let percent = (sec/total);
+        let circumference = 138.23;
+        let offset = circumference * (1-percent);
+        document.querySelector('.timer-progress').setAttribute('stroke-dashoffset', offset);
+    }
+    function renderQuizQuestion(){
+        let qz = state.currentQuiz; if(!qz) return;
+        let idx = qz.currentIndex, q = qz.questions[idx];
+        document.getElementById('quizProgress').innerText = `Q${idx+1}/${qz.questions.length}`;
+        document.getElementById('quizLang').innerText = q.lang.toUpperCase();
+        document.getElementById('questionText').innerHTML = q.q;
+        let ua = qz.answers[idx];
+        let revealed = ua!==undefined;
+        let optsHtml = q.options.map((opt,i)=>{
+            let cls = 'option-item';
+            if(revealed){
+                if(i===q.correct) cls+=' correct';
+                else if(i===ua) cls+=' incorrect';
+            } else if(i===ua) cls+=' selected';
+            return `<div class="${cls}" data-opt="${i}"><span class="option-letter">${String.fromCharCode(65+i)}</span><span>${opt}</span></div>`;
+        }).join('');
+        document.getElementById('optionsList').innerHTML = optsHtml;
+        let explBox = document.getElementById('explanationBox');
+        if(revealed){ explBox.innerHTML = `💡 ${q.explanation}`; explBox.classList.add('show');}
+        else explBox.classList.remove('show');
+        let isFlagged = qz.flagged[idx] || false;
+        document.getElementById('flagBtn').innerHTML = isFlagged ? '🏁 Flagged' : '🚩 Flag';
+        let isBookmarked = state.progress[q.id]?.bookmarked;
+        document.getElementById('bookmarkQuizBtn').innerHTML = isBookmarked ? '🔖 Bookmarked' : '🔖 Bookmark';
+        renderPalette();
+        attachOptionEvents();
+        document.getElementById('nextBtn').innerText = (idx===qz.questions.length-1) ? 'Finish' : 'Next →';
+    }
+    function renderPalette(){
+        let qz = state.currentQuiz; if(!qz) return;
+        let html = qz.questions.map((q,i)=>{
+            let ans = qz.answers[i];
+            let cls = 'palette-item';
+            if(i===qz.currentIndex) cls+=' current';
+            else if(ans!==undefined){
+                let isCorrect = (ans === q.correct);
+                cls += isCorrect ? ' answered-correct' : ' answered-wrong';
+            } else if(qz.flagged[i]) cls+=' marked';
+            return `<div class="${cls}" data-idx="${i}">${i+1}</div>`;
+        }).join('');
+        document.getElementById('paletteGrid').innerHTML = html;
+        document.querySelectorAll('.palette-item').forEach(el=>el.addEventListener('click',()=>goToQuestion(parseInt(el.dataset.idx))));
+    }
+    function attachOptionEvents(){
+        document.querySelectorAll('.option-item').forEach(el=>{
+            el.removeEventListener('click', optionClick);
+            el.addEventListener('click', optionClick);
+        });
+    }
+    function optionClick(e){
+        if(autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
+        let idx = state.currentQuiz.currentIndex;
+        if(state.currentQuiz.answers[idx] !== undefined) return;
+        let opt = parseInt(e.currentTarget.dataset.opt);
+        state.currentQuiz.answers[idx] = opt;
+        if(state.lastSession) state.lastSession.answers[idx]=opt;
+        saveState();
+        renderQuizQuestion();
+        autoAdvanceTimer = setTimeout(()=>{
+            if(state.currentQuiz && state.currentQuiz.currentIndex===idx && state.currentQuiz.answers[idx]!==undefined){
+                if(idx+1 >= state.currentQuiz.questions.length) endQuiz();
+                else goToQuestion(idx+1);
             }
-
-            // ---------- STATE ----------
-            let state = {
-                questionBank: [],
-                progress: {},
-                topicStats: {},
-                currentQuiz: null,
-                streak:0, totalAttempted:0, totalCorrect:0,
-                lastSession: null,
-                theme: {...DEFAULT_THEME},
-                uiCopy: {...DEFAULT_UI_COPY},
-                customLogic: null,
-                version: APP_VERSION
-            };
-
-            // ---------- HELPERS ----------
-            function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-            function formatTime(s){if(s<0)s=0;const m=Math.floor(s/60);const sec=s%60;return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`}
-            function showToast(msg){const old=document.querySelector('.toast');if(old)old.remove();const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2000)}
-            const getBookmarkedIds=()=>Object.entries(state.progress).filter(([,v])=>v.bookmarked).map(([k])=>k);
-            const getWeakTopics=(th=0.6)=>Object.entries(state.topicStats).filter(([,v])=>v.attempts>=3&&(v.correct/v.attempts)<th).map(([k])=>k);
-            const getOverallAccuracy=()=>state.totalAttempted>0?Math.round((state.totalCorrect/state.totalAttempted)*100):null;
-            const getTopicAccuracy=t=>{const s=state.topicStats[t];return s&&s.attempts>0?Math.round((s.correct/s.attempts)*100):null};
-
-            function adaptiveScoreWrapper(q, prog, tStats){
-                const fn = (state.customLogic && state.customLogic.adaptiveScore) || defaultAdaptiveScore;
-                return fn(q, prog, tStats, prog.difficultyStats);
+            autoAdvanceTimer = null;
+        }, 500);
+    }
+    function goToQuestion(idx){
+        if(autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
+        if(idx<0) idx=0;
+        if(idx>=state.currentQuiz.questions.length) idx = state.currentQuiz.questions.length-1;
+        state.currentQuiz.currentIndex = idx;
+        if(state.lastSession) state.lastSession.currentIndex = idx;
+        saveState();
+        renderQuizQuestion();
+    }
+    function endQuiz(timeout=false){
+        if(state.currentQuiz?.timerInterval) clearInterval(state.currentQuiz.timerInterval);
+        let qz = state.currentQuiz;
+        if(!qz) return;
+        let correct=0,total=0, details=[];
+        qz.questions.forEach((q,i)=>{
+            let ans = qz.answers[i];
+            if(ans!==undefined){
+                total++;
+                let isCorrect = (ans===q.correct);
+                if(isCorrect) correct++;
+                let prog = state.progress[q.id];
+                prog.attempts++; if(isCorrect) prog.correct++; prog.lastSeen=Date.now();
+                if(!prog.times) prog.times=[];
+                prog.times.push({correct:isCorrect, timestamp:Date.now()});
+                let ts = state.topicStats[q.topic];
+                ts.attempts++; if(isCorrect) ts.correct++;
+                state.totalAttempted++; if(isCorrect) state.totalCorrect++;
+                state.streak = isCorrect ? state.streak+1 : 0;
+                details.push({q,userAns:ans,isCorrect});
             }
-            function selectQuestionsWrapper(pool, count, filters={}){
-                let filtered = [...pool];
-                if(filters.lang&&filters.lang!=='mixed') filtered=filtered.filter(q=>q.lang===filters.lang);
-                if(filters.topic) filtered=filtered.filter(q=>q.topic===filters.topic);
-                if(filters.topicList&&filters.topicList.length) filtered=filtered.filter(q=>filters.topicList.includes(q.topic));
-                if(filters.bookmarkedOnly){const bm=getBookmarkedIds();filtered=filtered.filter(q=>bm.includes(q.id))}
-                if(filters.weakOnly){const wt=getWeakTopics();filtered=filtered.filter(q=>wt.includes(q.topic))}
-                if(filtered.length===0) filtered=[...pool];
-                const fn = (state.customLogic && state.customLogic.selectQuestions) || defaultSelectQuestions;
-                return fn(filtered, count, state.progress, state.topicStats);
-            }
-
-            // ---------- ROBUST PDF PARSER (fallback) ----------
-            function parsePDFToQuestions(rawText) {
-                const lines = rawText.split(/\r?\n/);
-                const questions = [];
-                let current = null;
-                let optionPattern = /^([A-D])[\.\)]\s*(.*)/i;
-                for (let line of lines) {
-                    line = line.trim();
-                    if (!line) continue;
-                    if (/Q\.No:\s*\d+/i.test(line)) {
-                        if (current && current.text && current.options.length===4) questions.push(current);
-                        current = { id: 'pdf_'+Date.now()+'_'+Math.random(), text: '', options: [], correct: 0, explanation: 'Auto-extracted from PDF', topic: 'english_reading', difficulty: 'medium', lang: 'english' };
-                        let withoutQ = line.replace(/Q\.No:\s*\d+\s*/i, '').trim();
-                        current.text = withoutQ;
-                    } else if (current && optionPattern.test(line)) {
-                        let match = line.match(optionPattern);
-                        if (match) current.options.push(match[2].trim());
-                    } else if (current && current.options.length < 4) {
-                        current.text += ' ' + line;
-                    } else if (current && current.options.length === 4 && /correct answer/i.test(line)) {
-                        let lower = line.toLowerCase();
-                        if (lower.includes('option a') || lower.includes('a)')) current.correct = 0;
-                        else if (lower.includes('b')) current.correct = 1;
-                        else if (lower.includes('c')) current.correct = 2;
-                        else if (lower.includes('d')) current.correct = 3;
-                    } else if (current && current.options.length === 4 && line.length > 5) {
-                        // maybe answer line: keep as explanation
-                        current.explanation = line;
-                    }
-                }
-                if (current && current.text && current.options.length===4) questions.push(current);
-                return questions;
-            }
-
-            // ---------- SNAPSHOT MERGE LOGIC (no data loss) ----------
-            function mergeSnapshot(snapshot) {
-                if (snapshot.questionBank && Array.isArray(snapshot.questionBank)) {
-                    const existingMap = new Map(state.questionBank.map(q=>[q.id, q]));
-                    for (let q of snapshot.questionBank) {
-                        if (!existingMap.has(q.id)) {
-                            state.questionBank.push(q);
-                            if (!state.progress[q.id]) state.progress[q.id] = { attempts:0, correct:0, lastSeen:null, bookmarked:false, difficultyStats:{} };
-                        } else {
-                            // update fields but keep progress
-                            Object.assign(existingMap.get(q.id), q);
-                        }
-                    }
-                }
-                if (snapshot.progress) Object.assign(state.progress, snapshot.progress);
-                if (snapshot.topicStats) Object.assign(state.topicStats, snapshot.topicStats);
-                if (snapshot.totalAttempted !== undefined) state.totalAttempted = snapshot.totalAttempted;
-                if (snapshot.totalCorrect !== undefined) state.totalCorrect = snapshot.totalCorrect;
-                if (snapshot.streak !== undefined) state.streak = snapshot.streak;
-                if (snapshot.theme) { state.theme = {...state.theme, ...snapshot.theme}; applyTheme(); }
-                if (snapshot.uiCopy) { state.uiCopy = {...state.uiCopy, ...snapshot.uiCopy}; applyUICopy(); }
-                if (snapshot.logic) {
-                    state.customLogic = state.customLogic || {};
-                    if (snapshot.logic.adaptiveScore) try { state.customLogic.adaptiveScore = eval('('+snapshot.logic.adaptiveScore+')'); } catch(e){}
-                    if (snapshot.logic.selectQuestions) try { state.customLogic.selectQuestions = eval('('+snapshot.logic.selectQuestions+')'); } catch(e){}
-                    saveOverrides();
-                }
-                return true;
-            }
-
-            // ---------- VALIDATE & APPLY IMPORT ----------
-            function validateAndApply(data) {
-                if (data.type === 'question_bank' && Array.isArray(data.questions)) {
-                    state.questionBank = data.questions;
-                    return true;
-                }
-                if (data.type === 'progress' && data.progress) {
-                    Object.assign(state.progress, data.progress);
-                    if (data.topicStats) Object.assign(state.topicStats, data.topicStats);
-                    if (data.totalAttempted !== undefined) state.totalAttempted = data.totalAttempted;
-                    if (data.totalCorrect !== undefined) state.totalCorrect = data.totalCorrect;
-                    if (data.streak !== undefined) state.streak = data.streak;
-                    return true;
-                }
-                if (data.type === 'snapshot') {
-                    return mergeSnapshot(data);
-                }
-                if (data.type === 'granular_update') {
-                    if (data.theme) { state.theme = {...state.theme, ...data.theme}; applyTheme(); }
-                    if (data.uiCopy) { state.uiCopy = {...state.uiCopy, ...data.uiCopy}; applyUICopy(); }
-                    if (data.logic) {
-                        state.customLogic = state.customLogic || {};
-                        if (data.logic.adaptiveScore) try { state.customLogic.adaptiveScore = eval('('+data.logic.adaptiveScore+')'); } catch(e){}
-                        if (data.logic.selectQuestions) try { state.customLogic.selectQuestions = eval('('+data.logic.selectQuestions+')'); } catch(e){}
-                        saveOverrides();
-                    }
-                    return true;
-                }
-                if (Array.isArray(data) && data.length && data[0].q) {
-                    state.questionBank = data;
-                    return true;
-                }
-                return false;
-            }
-
-            // ---------- OVERRIDES STORAGE ----------
-            function saveOverrides() {
-                const over = { theme: state.theme, uiCopy: state.uiCopy, logic: {} };
-                if (state.customLogic) {
-                    if (state.customLogic.adaptiveScore && state.customLogic.adaptiveScore !== defaultAdaptiveScore)
-                        over.logic.adaptiveScore = state.customLogic.adaptiveScore.toString();
-                    if (state.customLogic.selectQuestions && state.customLogic.selectQuestions !== defaultSelectQuestions)
-                        over.logic.selectQuestions = state.customLogic.selectQuestions.toString();
-                }
-                localStorage.setItem(STORAGE_KEY+'_overrides', JSON.stringify(over));
-            }
-            function loadOverrides() {
-                try {
-                    const stored = localStorage.getItem(STORAGE_KEY+'_overrides');
-                    if (stored) {
-                        const over = JSON.parse(stored);
-                        if (over.theme) state.theme = {...state.theme, ...over.theme};
-                        if (over.uiCopy) state.uiCopy = {...state.uiCopy, ...over.uiCopy};
-                        if (over.logic) {
-                            state.customLogic = {};
-                            if (over.logic.adaptiveScore) try { state.customLogic.adaptiveScore = eval('('+over.logic.adaptiveScore+')'); } catch(e){}
-                            if (over.logic.selectQuestions) try { state.customLogic.selectQuestions = eval('('+over.logic.selectQuestions+')'); } catch(e){}
-                        }
-                    }
-                } catch(e){}
-            }
-            function applyTheme() { Object.entries(state.theme).forEach(([k,v])=>document.documentElement.style.setProperty(k, v)); }
-            function applyUICopy() {
-                document.querySelector('.app-logo').innerHTML = state.uiCopy.appTitle;
-                document.getElementById('btnQuickQuiz').textContent = state.uiCopy.btnQuickQuiz;
-                document.getElementById('btnMockTest').textContent = state.uiCopy.btnMockTest;
-                document.getElementById('btnResumeSession').textContent = state.uiCopy.btnResume;
-                document.getElementById('lblAttempted').textContent = state.uiCopy.lblAttempted;
-                document.getElementById('lblAccuracy').textContent = state.uiCopy.lblAccuracy;
-                document.getElementById('lblStreak').textContent = state.uiCopy.lblStreak;
-                document.getElementById('lblBookmarks').textContent = state.uiCopy.lblBookmarks;
-                document.getElementById('progressLabel').textContent = state.uiCopy.progressEmpty;
-                document.getElementById('btnEndQuiz').textContent = state.uiCopy.quizEnd;
-                document.getElementById('btnPrev').textContent = state.uiCopy.prev;
-                document.getElementById('btnNext').textContent = state.uiCopy.next;
-                document.getElementById('btnBookmarkQuiz').innerHTML = '🔖 <span>('+state.uiCopy.bookmark.charAt(0)+')</span>';
-            }
-
-            // ---------- QUIZ ENGINE (with timer restore and auto-advance fix) ----------
-            let pendingAutoAdvance = null;
-            function startQuiz(config){
-                if (pendingAutoAdvance) clearTimeout(pendingAutoAdvance);
-                const questions = selectQuestionsWrapper(state.questionBank, config.count, config);
-                if(!questions.length){showToast('No questions.');return}
-                const timerSec = config.timerSeconds || (config.mode==='mock'?1200:null);
-                state.currentQuiz = {
-                    questions, answers: {}, currentIndex: 0, mode: config.mode||'practice',
-                    startTime: Date.now(), timerSeconds: timerSec, timerInterval: null
-                };
-                state.lastSession = {
-                    questions: questions.map(q=>q.id), answers: {}, currentIndex: 0,
-                    mode: config.mode||'practice', timerSeconds: timerSec, timestamp: Date.now()
-                };
-                navigateTo('quiz'); renderQuizQuestion();
-                if(timerSec) startTimer();
-                saveState();
-            }
-            function startTimer(){
-                if(state.currentQuiz.timerInterval) clearInterval(state.currentQuiz.timerInterval);
-                state.currentQuiz.timerInterval = setInterval(()=>{
-                    if(!state.currentQuiz) return;
-                    state.currentQuiz.timerSeconds--;
-                    updateTimerDisplay();
-                    if(state.currentQuiz.timerSeconds <= 0){
-                        clearInterval(state.currentQuiz.timerInterval);
-                        showToast(state.uiCopy.toastTimeUp);
-                        endQuiz();
-                    }
-                },1000);
-                updateTimerDisplay();
-            }
-            function updateTimerDisplay(){
-                const el=document.getElementById('quizTimer');
-                if(!el||!state.currentQuiz||state.currentQuiz.timerSeconds===null){if(el)el.textContent='--:--';return}
-                let sec=state.currentQuiz.timerSeconds;
-                if(sec<0) sec=0;
-                el.textContent=formatTime(sec);
-                el.classList.toggle('warning', sec<=60);
-            }
-            function restoreTimerFromLastSession(){
-                if(state.lastSession && state.lastSession.timerSeconds && state.lastSession.timestamp){
-                    const elapsed = Math.floor((Date.now() - state.lastSession.timestamp)/1000);
-                    let remaining = state.lastSession.timerSeconds - elapsed;
-                    if(remaining > 0 && state.currentQuiz) {
-                        state.currentQuiz.timerSeconds = remaining;
-                        startTimer();
-                    } else if(remaining <=0 && state.currentQuiz) endQuiz();
-                }
-            }
-            function resumeLastSession(){
-                if(!state.lastSession || !state.lastSession.questions.length){showToast('No session.');return}
-                const qs = state.lastSession.questions.map(id=>state.questionBank.find(q=>q.id===id)).filter(Boolean);
-                if(!qs.length){showToast('Missing questions.');return}
-                state.currentQuiz = {
-                    questions: qs, answers: state.lastSession.answers || {}, currentIndex: state.lastSession.currentIndex || 0,
-                    mode: state.lastSession.mode, startTime: Date.now(), timerSeconds: state.lastSession.timerSeconds, timerInterval: null
-                };
-                navigateTo('quiz'); renderQuizQuestion();
-                if(state.lastSession.timerSeconds) restoreTimerFromLastSession();
-                saveState();
-            }
-            function endQuiz(){
-                if(pendingAutoAdvance) clearTimeout(pendingAutoAdvance);
-                if(state.currentQuiz?.timerInterval) clearInterval(state.currentQuiz.timerInterval);
-                const quiz=state.currentQuiz; if(!quiz) return;
-                let correct=0,total=0; const review=[];
-                quiz.questions.forEach((q,i)=>{
-                    const ua=quiz.answers[i];
-                    if(ua!==undefined){
-                        total++; const isCorrect=(ua===q.correct);
-                        if(isCorrect) correct++;
-                        const prog=state.progress[q.id]||{attempts:0,correct:0,lastSeen:null,bookmarked:false,difficultyStats:{}};
-                        prog.attempts++; if(isCorrect) prog.correct++; prog.lastSeen=Date.now();
-                        const diff=q.difficulty||'medium';
-                        if(!prog.difficultyStats) prog.difficultyStats={};
-                        if(!prog.difficultyStats[diff]) prog.difficultyStats[diff]={attempts:0,correct:0};
-                        prog.difficultyStats[diff].attempts++;
-                        if(isCorrect) prog.difficultyStats[diff].correct++;
-                        state.progress[q.id]=prog;
-                        const ts=state.topicStats[q.topic]||{attempts:0,correct:0};
-                        ts.attempts++; if(isCorrect) ts.correct++;
-                        state.topicStats[q.topic]=ts;
-                        state.totalAttempted++; if(isCorrect) state.totalCorrect++;
-                        state.streak = isCorrect ? state.streak+1 : 0;
-                        review.push({q,userAnswer:ua,isCorrect,index:i});
-                    }
-                });
-                state.lastSession=null; state.currentQuiz=null;
-                saveState();
-                renderResults(review,correct,total);
-                navigateTo('results');
-            }
-            function goToQuestion(idx){
-                if(pendingAutoAdvance) clearTimeout(pendingAutoAdvance);
-                if(!state.currentQuiz) return;
-                if(idx<0) idx=0;
-                if(idx>=state.currentQuiz.questions.length) idx=state.currentQuiz.questions.length-1;
-                state.currentQuiz.currentIndex=idx;
-                if(state.lastSession) state.lastSession.currentIndex=idx;
-                saveState();
-                renderQuizQuestion();
-                document.getElementById('questionCard').scrollIntoView({behavior:'smooth',block:'start'});
-            }
-            function renderQuizQuestion(){
-                const quiz=state.currentQuiz; if(!quiz) return;
-                const idx=quiz.currentIndex, q=quiz.questions[idx]; if(!q) return;
-                document.getElementById('quizProgress').textContent=`Q ${idx+1}/${quiz.questions.length}`;
-                document.getElementById('quizLangBadge').textContent=q.lang.toUpperCase();
-                document.getElementById('questionNumber').textContent=`QUESTION ${idx+1} • ${DEFAULT_TOPIC_LABELS[q.topic]||q.topic} • ${q.difficulty.toUpperCase()}`;
-                const qt=document.getElementById('questionText'); qt.textContent=q.q;
-                qt.className='question-text'+(q.lang==='hindi'?' hindi':'');
-                const ua=quiz.answers[idx]; const revealed=ua!==undefined;
-                const optsDiv=document.getElementById('optionsList');
-                optsDiv.innerHTML=q.options.map((opt,i)=>`<div class="option-item ${revealed?(i===q.correct?'correct':i===ua?'incorrect':'revealed'):(i===ua?'selected':'')}" data-opt="${i}"><span class="option-letter">${String.fromCharCode(65+i)}</span><span>${opt}</span></div>`).join('');
-                const expl=document.getElementById('explanationBox');
-                if(revealed){expl.textContent='💡 '+q.explanation; expl.classList.add('show');}
-                else expl.classList.remove('show');
-                const isBm=state.progress[q.id]?.bookmarked;
-                document.getElementById('btnBookmarkQuiz').classList.toggle('bookmarked',isBm);
-                renderPalette();
-                document.querySelectorAll('#optionsList .option-item').forEach(el=>el.addEventListener('click',(e)=>{
-                    if(revealed) return;
-                    const optIdx=parseInt(el.dataset.opt);
-                    quiz.answers[idx]=optIdx;
-                    if(state.lastSession) state.lastSession.answers[idx]=optIdx;
-                    saveState();
-                    renderQuizQuestion();
-                    // Auto-advance after 0.5s, but prevent race
-                    if(pendingAutoAdvance) clearTimeout(pendingAutoAdvance);
-                    pendingAutoAdvance = setTimeout(()=>{
-                        if(state.currentQuiz && state.currentQuiz.currentIndex===idx && state.currentQuiz.answers[idx]!==undefined){
-                            if(idx+1 >= state.currentQuiz.questions.length) endQuiz();
-                            else goToQuestion(idx+1);
-                        }
-                        pendingAutoAdvance=null;
-                    },500);
-                }));
-                updateTimerDisplay();
-                document.getElementById('btnNext').textContent=idx>=quiz.questions.length-1?state.uiCopy.finish:state.uiCopy.next;
-            }
-            function renderPalette(){
-                const quiz=state.currentQuiz; if(!quiz) return;
-                const wrap=document.getElementById('paletteWrap');
-                wrap.innerHTML=quiz.questions.map((q,i)=>`<div class="palette-dot ${i===quiz.currentIndex?'current':''} ${quiz.answers[i]!==undefined?'answered':''} ${state.progress[q.id]?.bookmarked?'bookmarked-dot':''}" data-idx="${i}">${i+1}</div>`).join('');
-                wrap.querySelectorAll('.palette-dot').forEach(d=>d.addEventListener('click',()=>goToQuestion(parseInt(d.dataset.idx))));
-            }
-            function renderResults(review,correct,total){
-                const acc=total>0?Math.round((correct/total)*100):0;
-                document.getElementById('resultsSummary').innerHTML=`
-                    <div class="result-card"><div class="stat-value green">${correct}/${total}</div><div class="stat-label">Correct</div></div>
-                    <div class="result-card"><div class="stat-value">${acc}%</div><div class="stat-label">Accuracy</div></div>
-                    <div class="result-card"><div class="stat-value orange">${state.streak}</div><div class="stat-label">Streak</div></div>`;
-                document.getElementById('reviewList').innerHTML=review.map(r=>`<div class="review-item ${r.isCorrect?'correct-review':'incorrect-review'}"><strong>Q${r.index+1}:</strong> ${r.q.q.substring(0,70)}...<br><small>Your: ${r.q.options[r.userAnswer]} | ✓: ${r.q.options[r.q.correct]}</small><br><small style="color:var(--text-muted)">${r.q.explanation}</small></div>`).join('');
-            }
-            // Dashboard, bookmarks, weakness render functions (similar to original, omitted for brevity but present)
-            function renderDashboard(){ /* existing logic, kept */ }
-            function renderBookmarks(){ /* existing */ }
-            function renderWeakness(){ /* existing */ }
-            function navigateTo(screen){ /* existing */ }
-            function saveState(){ /* existing */ }
-            function loadState(){ /* existing with seed */ }
-
-            // --- Minimal seed data (same as before but included) ---
-            const SEED_BANK = [
-                {id:'hirc01',topic:'hindi_reading',difficulty:'medium',lang:'hindi',q:'गद्यांश: "कृत्रिम बुद्धिमत्ता मानवीय संवेदनाओं को समझने में असमर्थ है..." — लेखक का दृष्टिकोण?',options:['पूर्ण समर्थन','संतुलित आशंका','उदासीनता','अज्ञानता'],correct:1,explanation:'लेखक AI की सीमा स्वीकारते हुए चिंता व्यक्त करता है।'},
-                {id:'egr01',topic:'english_grammar',difficulty:'medium',lang:'english',q:'"By the end of this year, she ___ her course."',options:['will complete','will have completed','completed','is completing'],correct:1,explanation:'Future perfect for action before future point.'},
-                {id:'adm01',topic:'admin_hindi',difficulty:'medium',lang:'hindi',q:'"Cadre" का आधिकारिक हिन्दी अनुवाद:',options:['संवर्ग','वर्ग','श्रेणी','दल'],correct:0,explanation:'राजभाषा विभाग के अनुसार मानक शब्द।'}
-            ];
-            // Add more seeds as needed...
-
-            function loadState(){
-                try{
-                    const raw=localStorage.getItem(STORAGE_KEY);
-                    if(raw){
-                        const d=JSON.parse(raw);
-                        state.questionBank=d.questionBank?.length?d.questionBank:[...SEED_BANK];
-                        state.progress=d.progress||{};
-                        state.topicStats=d.topicStats||{};
-                        state.streak=d.streak||0; state.totalAttempted=d.totalAttempted||0; state.totalCorrect=d.totalCorrect||0;
-                        state.lastSession=d.lastSession||null;
-                    }else{ state.questionBank=[...SEED_BANK]; }
-                }catch(e){ state.questionBank=[...SEED_BANK]; }
-                state.questionBank.forEach(q=>{
-                    if(!state.progress[q.id]) state.progress[q.id]={attempts:0,correct:0,lastSeen:null,bookmarked:false,difficultyStats:{}};
-                    if(!state.topicStats[q.topic]) state.topicStats[q.topic]={attempts:0,correct:0};
-                });
-            }
-            function saveState(){
-                const toSave={questionBank:state.questionBank, progress:state.progress, topicStats:state.topicStats,
-                               streak:state.streak, totalAttempted:state.totalAttempted, totalCorrect:state.totalCorrect,
-                               lastSession:state.lastSession, version:state.version};
-                localStorage.setItem(STORAGE_KEY,JSON.stringify(toSave));
-            }
-            // Attach event listeners etc. (existing code but simplified for brevity)
-            // We assume the rest of the event binding and keyboard shortcuts are correctly implemented as in the original.
-            // The full working app will be delivered as a single file.
-            console.log('App ready with all fixes: PDF parser, PWA, merge, auto-advance fix, timer restore, difficulty tracking, accessibility');
-        })();
-    </script>
-    <script>
-        // Service Worker Registration for PWA
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').catch(err=>console.log('SW registration failed', err));
+        });
+        state.sessionHistory.unshift({timestamp:Date.now(), accuracy: total?Math.round(correct/total*100):0, total});
+        if(state.sessionHistory.length>20) state.sessionHistory.pop();
+        state.currentQuiz = null;
+        state.lastSession = null;
+        saveState();
+        showResults(details, correct, total);
+        showScreen('results');
+    }
+    function showResults(details, correct, total){
+        let acc = total?Math.round(correct/total*100):0;
+        let html = `<div class="results-summary"><div class="stat-card"><div class="stat-value">${correct}/${total}</div><div class="stat-label">Correct</div></div><div class="stat-card"><div class="stat-value">${acc}%</div><div class="stat-label">Accuracy</div></div><div class="stat-card"><div class="stat-value">🔥 ${state.streak}</div><div class="stat-label">Streak</div></div></div>`;
+        html += `<h4>Topic Breakdown</h4><div class="weakness-heatmap">`;
+        let topicAcc = {};
+        details.forEach(d=>{
+            let t = d.q.topic;
+            if(!topicAcc[t]) topicAcc[t]={correct:0,total:0};
+            topicAcc[t].total++;
+            if(d.isCorrect) topicAcc[t].correct++;
+        });
+        for(let [t,stats] of Object.entries(topicAcc)){
+            let pct = Math.round(stats.correct/stats.total*100);
+            let color = pct>=70?'#10b981':pct>=50?'#f59e0b':'#ef4444';
+            html += `<div style="background:${color}; padding:0.3rem; border-radius:0.5rem; text-align:center">${t.replace('_',' ')}<br>${pct}%</div>`;
         }
-        // Dynamically create manifest.json and sw.js if not present (in-memory)
-        (function createPWA() {
-            const manifest = {
-                name: "SSC JHT 2026 Expert Quiz",
-                short_name: "SSC JHT",
-                start_url: ".",
-                display: "standalone",
-                theme_color: "#1a1d23",
-                background_color: "#1a1d23",
-                icons: [{ src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%235b9bd5'/%3E%3Ctext x='50' y='67' font-size='50' text-anchor='middle' fill='white' font-weight='bold'%3EJHT%3C/text%3E%3C/svg%3E", sizes: "any" }]
-            };
-            const swCode = `self.addEventListener('install', e=>e.waitUntil(self.skipWaiting())); self.addEventListener('fetch', e=>e.respondWith(fetch(e.request).catch(()=>new Response('Offline',{status:503}))));`;
-            if (!document.querySelector('#dynamicManifest')) {
-                const blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('link');
-                link.rel = 'manifest';
-                link.href = url;
-                document.head.appendChild(link);
-            }
-            if (!localStorage.getItem('sw_registered')) {
-                const swBlob = new Blob([swCode], {type:'application/javascript'});
-                const swUrl = URL.createObjectURL(swBlob);
-                navigator.serviceWorker.register(swUrl).then(()=>localStorage.setItem('sw_registered','true'));
-            }
-        })();
-    </script>
+        html += `</div><div id="reviewDetail"></div>`;
+        document.getElementById('resultsContent').innerHTML = html;
+        let reviewHtml = details.map(d=>`<div style="border-left:3px solid ${d.isCorrect?'#10b981':'#ef4444'}; margin:0.5rem 0; padding:0.5rem"><strong>${d.q.q}</strong><br>Your: ${d.q.options[d.userAns]} | Correct: ${d.q.options[d.q.correct]}<br><small>${d.q.explanation}</small></div>`).join('');
+        document.getElementById('reviewDetail').innerHTML = reviewHtml;
+    }
+    function renderWeaknessHeatmap(){
+        let topics = [...new Set(state.questionBank.map(q=>q.topic))];
+        let html = `<div class="weakness-heatmap">`;
+        topics.forEach(t=>{
+            let acc = getTopicAccuracy(t);
+            let color = acc===null?'#94a3b8':acc>=70?'#10b981':acc>=50?'#f59e0b':'#ef4444';
+            html += `<div class="heatmap-cell" style="background:${color}" data-topic="${t}">${t.replace('_',' ')}<br>${acc!==null?acc+'%':'—'}</div>`;
+        });
+        html += `</div>`;
+        document.getElementById('weaknessHeatmap').innerHTML = html;
+        document.querySelectorAll('.heatmap-cell').forEach(el=>el.addEventListener('click',()=>startQuiz({count:8,lang:'mixed',topic:el.dataset.topic})));
+    }
+    function renderBookmarks(){
+        let bm = getBookmarkedIds();
+        let html = bm.length? bm.map(id=>{
+            let q = state.questionBank.find(q=>q.id===id);
+            if(!q) return '';
+            return `<div class="topic-card" data-qid="${id}"><strong>${q.q.substring(0,60)}...</strong><br><small>${q.topic}</small></div>`;
+        }).join('') : '<p>No bookmarks</p>';
+        document.getElementById('bookmarkList').innerHTML = html;
+        document.querySelectorAll('[data-qid]').forEach(el=>el.addEventListener('click',()=>startQuiz({count:1,bookmarkedOnly:true})));
+    }
+    function showScreen(screen){
+        document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+        document.getElementById(`screen${screen.charAt(0).toUpperCase()+screen.slice(1)}`).classList.add('active');
+        if(screen==='dashboard') renderDashboard();
+        if(screen==='weakness') renderWeaknessHeatmap();
+        if(screen==='bookmarks') renderBookmarks();
+        document.getElementById('bookmarkBadge').style.display = getBookmarkedIds().length?'flex':'none';
+        document.getElementById('bookmarkBadge').innerText = getBookmarkedIds().length;
+    }
+    // Modal & import/export (simplified but functional)
+    function showModal(){document.getElementById('importModal').classList.add('show');}
+    function closeModal(){document.getElementById('importModal').classList.remove('show');}
+    // Theme toggle
+    function toggleTheme(){
+        let curr = document.body.getAttribute('data-theme');
+        let newTheme = curr==='light'?'dark':'light';
+        document.body.setAttribute('data-theme',newTheme);
+        localStorage.setItem('theme',newTheme);
+        document.getElementById('themeToggle').innerText = newTheme==='light'?'🌙':'☀️';
+    }
+    // Event bindings
+    document.getElementById('btnDashboard').addEventListener('click',()=>showScreen('dashboard'));
+    document.getElementById('btnBookmarks').addEventListener('click',()=>showScreen('bookmarks'));
+    document.getElementById('btnWeakness').addEventListener('click',()=>showScreen('weakness'));
+    document.getElementById('btnImport').addEventListener('click',showModal);
+    document.getElementById('closeModalBtn').addEventListener('click',closeModal);
+    document.getElementById('quickQuiz').addEventListener('click',()=>startQuiz({count:10}));
+    document.getElementById('mockTest').addEventListener('click',()=>startQuiz({count:30,mode:'mock',timerSeconds:1200}));
+    document.getElementById('resumeSessionBtn').addEventListener('click',()=>{if(state.lastSession) startQuiz({count:state.lastSession.questions.length, fromResume:true})});
+    document.getElementById('hindiOnly').addEventListener('click',()=>startQuiz({count:8,lang:'hindi'}));
+    document.getElementById('englishOnly').addEventListener('click',()=>startQuiz({count:8,lang:'english'}));
+    document.getElementById('mixedQuiz').addEventListener('click',()=>startQuiz({count:10,lang:'mixed'}));
+    document.getElementById('prevBtn').addEventListener('click',()=>{if(state.currentQuiz) goToQuestion(state.currentQuiz.currentIndex-1);});
+    document.getElementById('nextBtn').addEventListener('click',()=>{if(state.currentQuiz){let idx=state.currentQuiz.currentIndex; if(idx+1>=state.currentQuiz.questions.length) endQuiz(); else goToQuestion(idx+1);}});
+    document.getElementById('endQuizBtn').addEventListener('click',()=>{if(confirm('End quiz?')) endQuiz();});
+    document.getElementById('flagBtn').addEventListener('click',()=>{if(state.currentQuiz){let idx=state.currentQuiz.currentIndex; state.currentQuiz.flagged[idx]=!state.currentQuiz.flagged[idx]; if(state.lastSession) state.lastSession.flagged[idx]=state.currentQuiz.flagged[idx]; saveState(); renderQuizQuestion();}});
+    document.getElementById('bookmarkQuizBtn').addEventListener('click',()=>{if(state.currentQuiz){let q=state.currentQuiz.questions[state.currentQuiz.currentIndex]; let p=state.progress[q.id]; p.bookmarked=!p.bookmarked; saveState(); renderQuizQuestion(); showToast(p.bookmarked?'Bookmarked!':'Removed');}});
+    document.getElementById('newQuizBtn').addEventListener('click',()=>showScreen('dashboard'));
+    document.getElementById('retryIncorrectBtn').addEventListener('click',()=>{/* implement retry incorrect from last results */});
+    document.getElementById('backDashboardBtn').addEventListener('click',()=>showScreen('dashboard'));
+    document.getElementById('practiceBookmarksBtn').addEventListener('click',()=>{if(getBookmarkedIds().length) startQuiz({count:Math.min(10,getBookmarkedIds().length), bookmarkedOnly:true}); else showToast('No bookmarks');});
+    document.getElementById('clearBookmarksBtn').addEventListener('click',()=>{if(confirm('Clear all bookmarks?')){Object.keys(state.progress).forEach(id=>state.progress[id].bookmarked=false); saveState(); renderBookmarks(); showToast('Cleared');}});
+    document.getElementById('practiceWeakBtn').addEventListener('click',()=>{let weaks=getWeakTopics(); if(weaks.length) startQuiz({count:10, weakOnly:true, lang:'mixed'}); else showToast('No weak topics');});
+    document.getElementById('themeToggle').addEventListener('click',toggleTheme);
+    document.getElementById('applyThemeBtn').addEventListener('click',()=>{let color=document.getElementById('accentColor').value; document.documentElement.style.setProperty('--accent',color); document.documentElement.style.setProperty('--accent-dark',color);});
+    document.getElementById('importQuestionsBtn').addEventListener('click',()=>{try{let arr=JSON.parse(document.getElementById('jsonImport').value); if(Array.isArray(arr)){state.questionBank.push(...arr); saveState(); showToast('Imported');}}catch(e){showToast('Invalid JSON');}});
+    document.getElementById('exportSnapshotBtn').addEventListener('click',()=>{let snap={type:'snapshot',questionBank:state.questionBank,progress:state.progress,topicStats:state.topicStats,streak:state.streak,totalAttempted:state.totalAttempted,totalCorrect:state.totalCorrect}; let a=document.createElement('a');a.href='data:application/json,'+encodeURIComponent(JSON.stringify(snap));a.download='snapshot.json';a.click();});
+    document.getElementById('uploadFileBtn').addEventListener('click',()=>document.getElementById('fileUpload').click());
+    document.getElementById('fileUpload').addEventListener('change',e=>{let f=e.target.files[0]; if(f){let r=new FileReader(); r.onload=ev=>{document.getElementById('jsonImport').value=ev.target.result;}; r.readAsText(f);}});
+    function showToast(msg){let t=document.createElement('div');t.className='toast';t.innerText=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2000);}
+    loadState();
+    let savedTheme = localStorage.getItem('theme');
+    if(savedTheme) document.body.setAttribute('data-theme',savedTheme);
+    else if(window.matchMedia('(prefers-color-scheme: dark)').matches) document.body.setAttribute('data-theme','dark');
+    renderDashboard();
+    showScreen('dashboard');
+})();
+</script>
 </body>
 </html>
